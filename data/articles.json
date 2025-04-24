@@ -1,0 +1,28 @@
+{
+    "articles": [
+        {
+            "id": "article1",
+            "title": "Top 10 Anime of 2023",
+            "description": "A comprehensive look at the best anime releases of 2023, featuring breakthrough series and fan favorites.",
+            "date": "2023-10-01",
+            "image": "assets/images/article1.jpg",
+            "url": "articles/article1.html"
+        },
+        {
+            "id": "article2",
+            "title": "Evolution of Anime Art Styles",
+            "description": "Exploring how anime art styles have evolved from the 1960s to modern day digital animation.",
+            "date": "2023-10-15",
+            "image": "assets/images/article2.jpg",
+            "url": "articles/article2.html"
+        },
+        {
+            "id": "article3",
+            "title": "Must-Watch Classic Anime Series",
+            "description": "Discover timeless anime classics that every fan should watch at least once.",
+            "date": "2023-10-20",
+            "image": "assets/images/article3.jpg",
+            "url": "articles/article3.html"
+        }
+    ]
+}

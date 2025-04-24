@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Dynasty - Your Ultimate Anime Hub</title>
+    <!-- Add these in the head section -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="assets/images/logo.png" alt="Anime Dynasty Logo" height="40" class="me-2">
+                Anime Dynasty
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+           x </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="articles.html">Articles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ongoing-anime.html">Latest Releases</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="video-overlay"></div>
+        <div class="video-container">
+            <video class="background-video" autoplay muted loop playsinline preload="auto">
+                <source src="assets/videos/Demon_Slayer.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="container text-center">
+            <h1 class="display-4 mb-4">Welcome to Anime Dynasty</h1>
+            <p class="lead mb-4">Your ultimate destination for anime reviews, discussions, and downloads</p>
+            <a href="#articles" class="episode-button">
+                <i class="fas fa-compass"></i> Explore Latest Content
+            </a>
+        </div>
+    </section>
+
+    <section class="latest-articles py-5" id="articles">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h2>Latest Articles</h2>
+                <a href="articles.html" class="episode-button">
+                    <i class="fas fa-book"></i> View All Articles
+                </a>
+            </div>
+            <div class="row" id="article-container">
+                <!-- Articles will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" id="ongoing">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h2>Recently Released</h2>
+                <a href="ongoing-anime.html" class="episode-button">
+                    <i class="fas fa-play"></i> View All
+                </a>
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4" id="latest-releases-grid">
+                <!-- Episodes will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-dark" id="upcoming">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h2 class="text-light">Upcoming Releases</h2>
+                <a href="upcoming.html" class="episode-button">
+                    <i class="fas fa-calendar"></i> View Schedule
+                </a>
+            </div>
+            <div class="row row-cols-5 g-4" id="upcoming-releases">
+                <!-- Upcoming releases will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- First, move the Episode Discussions section where the support section was -->
+    <section class="support-section">
+        <div class="container">
+            <h3>Episode Discussions</h3>
+            <div id="comment-auth-status">
+                <!-- Login Form -->
+                <div class="login-container" id="loginSection">
+                    <div class="login-box">
+                        <h2>Welcome Back</h2>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="username" placeholder="Username">
+                            <label for="username">Username</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="password" placeholder="Password">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="episode-button" onclick="login()">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+                            <button class="episode-button" onclick="showRegister()">
+                                <i class="fas fa-user-plus"></i> Create Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Comment Form -->
+                <div class="comment-form mb-4 d-none" id="commentSection">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-light" id="loggedInUser"></span>
+                        <button class="episode-button" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                    <textarea class="form-control mb-3" id="commentText" rows="3" placeholder="Share your thoughts..."></textarea>
+                    <button class="episode-button" onclick="postComment()">
+                        <i class="fas fa-paper-plane"></i> Post Comment
+                    </button>
+                </div>
+            </div>
+            <div id="comments-container">
+                <!-- Comments will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Then, move the donation section where the comments section was -->
+    <div class="comments-section mt-5">
+        <div class="container text-center">
+            <h2>Support Anime Dynasty</h2>
+            <p>Help us keep bringing you awesome content!</p>
+            <button class="donate-button" data-bs-toggle="modal" data-bs-target="#donationModal">
+                <i class="fas fa-heart"></i> Donate
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-light">Home</a></li>
+                        <li><a href="articles.html" class="text-light">Articles</a></li>
+                        <li><a href="ongoing-anime.html" class="text-light">Latest Releases</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect With Us</h5>
+                    <div class="social-links">
+                        <a href="https://x.com/_AnimeDynasty" target="_blank" class="text-light me-3">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://discord.gg/UQkEY3jUWS" target="_blank" class="text-light me-3">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                        <a href="https://reddit.com/r/Anime_Dynasty" target="_blank" class="text-light">
+                            <i class="fab fa-reddit"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <p>&copy; 2025 Anime Dynasty. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Donation Modal -->
+    <div class="modal fade" id="donationModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">❤️ Support Anime Dynasty</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-center mb-4">📱 Scan QR Code</h5>
+                            <div class="qr-code-container text-center">
+                                <img src="assets/images/payment/qr-code.png" alt="QR Code" class="img-fluid">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="text-center mb-4">💳 Payment Options</h5>
+                            <div class="payment-options">
+                                <div class="payment-option mb-3" data-payment="gpay">
+                                    <img src="assets/images/payment/gpay-official.png" alt="Google Pay" class="img-fluid payment-logo">
+                                </div>
+                                <div class="payment-option mb-3" data-payment="phonepe">
+                                    <img src="assets/images/payment/phonepe-official.png" alt="PhonePe" class="img-fluid payment-logo">
+                                </div>
+                                <div class="payment-option mb-3" data-payment="paytm">
+                                    <img src="assets/images/payment/paytm-official.png" alt="Paytm" class="img-fluid payment-logo">
+                                </div>
+                            </div>
+                            <div class="amount-section mt-4">
+                                <h5 class="text-center mb-3">Select Amount</h5>
+                                <div class="amount-options">
+                                    <button class="amount-btn" data-amount="100">₹100</button>
+                                    <button class="amount-btn" data-amount="200">₹200</button>
+                                    <button class="amount-btn" data-amount="500">₹500</button>
+                                    <div class="custom-amount-container">
+                                        <input type="number" class="custom-amount-input" placeholder="Custom" min="1">
+                                        <span class="currency-symbol">₹</span>
+                                    </div>
+                                </div>
+                                <div class="anonymous-option mt-3">
+                                    <label class="anonymous-label">
+                                        <input type="checkbox" id="anonymousDonation"> Make donation anonymous
+                                    </label>
+                                </div>
+                                <button class="donate-confirm-btn mt-3" disabled>
+                                    Proceed to Pay
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <p class="text-center mb-0">⭐ Your support helps us maintain and improve the platform!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="assets/js/razorpay-config.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/articles.js"></script>
+    <script src="/assets/js/ongoing-anime.js"></script>
+    <script src="/assets/js/home.js"></script>
+    <script src="assets/js/donation.js"></script>
+</body>
+</html>

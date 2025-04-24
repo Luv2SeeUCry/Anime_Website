@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Be Hero X - Episode 2 - AnimeVerse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="bg-dark text-light">
+    <div class="container py-5">
+        <h1>To Be Hero X</h1>
+        <h2>Episode 2</h2>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-grid">
+                    <select class="form-select" id="episodeSelect" onchange="if(this.value) window.location.href=this.value">
+                        <option value="">Previous Episodes</option>
+                        <option value="to-be-hero-x-episode-1.html">Episode 1</option> <option value="to-be-hero-x-episode-2.html">Episode 2</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="video-container mb-4">
+            <div class="resolution-selector mb-3">
+                <select class="form-select" id="qualitySelect" onchange="changeQuality(this.value)">
+                    <option value="1080p">1080p</option>
+                    <option value="720p">720p</option>
+                    <option value="360p">360p</option>
+                </select>
+            </div>
+            <video controls class="w-100" id="videoPlayer">
+                <source src="../downloads/to-be-hero-x/1080p/episode-2.mp4" type="video/mp4" id="videoSource">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="episode-info mb-4">
+            <p><i class="fas fa-calendar me-2"></i>Release Day: Sunday</p>
+            <p><i class="fas fa-clock me-2"></i>Release Time: 22:30</p>
+            <p><i class="fas fa-info-circle me-2"></i>Status: Ongoing</p>
+        </div>
+        <div class="d-grid">
+            <a href="../ongoing-anime.html" class="btn btn-primary btn-lg">
+                <i class="fas fa-arrow-left me-2"></i>Back to Anime List
+            </a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function changeQuality(quality) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoSource = document.getElementById('videoSource');
+            const currentTime = videoPlayer.currentTime;
+            const wasPlaying = !videoPlayer.paused;
+            
+            videoSource.src = '../downloads/to-be-hero-x/' + quality + '/episode-2.mp4';
+            videoPlayer.load();
+            
+            videoPlayer.addEventListener('loadedmetadata', function() {
+                videoPlayer.currentTime = currentTime;
+                if (wasPlaying) {
+                    videoPlayer.play();
+                }
+            }, { once: true });
+        }
+    </script>
+</body>
+</html>
