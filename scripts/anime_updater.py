@@ -30,13 +30,11 @@ class AnimeUpdater:
             response = requests.get(api_url)
             data = response.json()
 
-            if data and 'schedule' in data:
-                shows_data = data['schedule']
-            else:
+            shows_data = data.get('schedule', {})
+            if not shows_data:
                 api_url = "https://subsplease.org/api/?f=latest&tz=Asia/Tokyo"
                 response = requests.get(api_url)
-                data = response.json()
-                shows_data = data.get('data', [])
+                shows_data = response.json().get('data', [])
 
             if not shows_data:
                 logger.warning("No entries found in both APIs")

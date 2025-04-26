@@ -40,6 +40,19 @@
             <p><i class="fas fa-clock me-2"></i>Release Time: 22:00</p>
             <p><i class="fas fa-info-circle me-2"></i>Status: Ongoing</p>
         </div>
+        
+        <!-- Add Discussion Section -->
+        <div class="discussion-section mb-4">
+            <h3>Episode Discussion</h3>
+            <div class="comments-container" id="comments-container">
+                <!-- Comments will be loaded here -->
+            </div>
+            <div class="comment-form">
+                <textarea class="form-control mb-2" id="comment-text" placeholder="Share your thoughts..."></textarea>
+                <button class="btn btn-primary" onclick="postComment()">Post Comment</button>
+            </div>
+        </div>
+        
         <div class="d-grid">
             <a href="../ongoing-anime.html" class="btn btn-primary btn-lg">
                 <i class="fas fa-arrow-left me-2"></i>Back to Anime List
@@ -64,6 +77,47 @@
                 }
             }, { once: true });
         }
+        
+        // Add Discussion Functions
+        function loadComments() {
+            const episodeId = 'sword-of-the-demon-hunter-2'; // Unique ID for this episode
+            fetch(`/api/comments/${episodeId}`)
+                .then(response => response.json())
+                .then(comments => {
+                    const container = document.getElementById('comments-container');
+                    container.innerHTML = comments.map(comment => `
+                        <div class="comment">
+                            <strong>${comment.username}</strong>
+                            <p>${comment.text}</p>
+                            <small>${comment.timestamp}</small>
+                        </div>
+                    `).join('');
+                });
+        }
+
+        function postComment() {
+            const text = document.getElementById('comment-text').value;
+            if (!text.trim()) return;
+
+            fetch('/api/comments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    episodeId: 'sword-of-the-demon-hunter-2',
+                    text: text
+                })
+            })
+            .then(response => response.json())
+            .then(() => {
+                document.getElementById('comment-text').value = '';
+                loadComments();
+            });
+        }
+
+        // Load comments when page loads
+        document.addEventListener('DOMContentLoaded', loadComments);
     </script>
 </body>
 </html>

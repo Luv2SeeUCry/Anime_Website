@@ -3,21 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>15 Must-Watch Comedy Anime Series - Anime Dynasty</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicon/apple-touch-icon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .article-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 2rem;
+            padding: 10px;
+        }
+
+        .article-title {
+            background: #1a237e;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1.8rem;
+            color: white;
+            margin: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .publish-date {
+            background: #424242;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+
+        .article-banner {
+            width: 100%;
+            height: auto;
+            max-height: none;  /* Remove the max-height restriction */
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .article-banner img {
+            width: 100%;
+            height: 100%;  /* Change from 100% to auto */
+            object-fit: cover;  /* Change from contain to cover */
+            display: block;
+        }
+
+        .article-content h2 {
+            color: #ff4757;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            border-left: 5px solid #ff4757;
+            padding-left: 15px;
+        }
+
+        .article-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #f1f2f6;
+            margin-bottom: 1.5rem;
+            padding: 0 15px;
+        }
+
+        .introduction {
+            background: rgba(47, 53, 66, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+    </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body class="bg-dark text-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="../index.html">Anime Dynasty</a>
+            <a class="navbar-brand d-flex align-items-center" href="../index.html">
+                <img src="../assets/images/logo.png" alt="Anime Dynasty Logo" height="40" class="me-2">
+                Anime Dynasty
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="../articles.html">Articles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../ongoing-anime.html">Latest Releases</a></li>
                 </ul>
             </div>
         </div>
@@ -25,13 +103,20 @@
 
     <div class="container mt-5 pt-4">
         <article class="bg-dark text-light p-4 rounded">
-            <h1>15 Must-Watch Comedy Anime Series</h1>
-            <p class="text-muted">Published: October 15, 2023</p>
-            <img src="../assets/images/comedy-anime.jpg" class="img-fluid rounded mb-4" alt="Comedy Anime Collection">
+            <div class="article-header">
+                <h1 class="article-title">15 Must-Watch Comedy Anime Series</h1>
+                <span class="publish-date">Published: April 27, 2025</span>
+            </div>
             
+            <div class="article-banner">
+                <img src="../assets/images/comedy-anime.jpg" alt="Best Romance Anime Banner">
+            </div>
+
             <div class="article-content">
-                <h2>Introduction</h2>
-                <p>Looking for a good laugh? These comedy anime series offer the perfect blend of humor, entertainment, and memorable characters that will keep you laughing throughout each episode.</p>
+                <div class="introduction">
+                    <h2>Introduction</h2>
+                    <p>Looking for a good laugh? These comedy anime series offer the perfect blend of humor, entertainment, and memorable characters that will keep you laughing throughout each episode.</p>
+                </div>
 
                 <h2>15. Haven't You Heard? I'm Sakamoto</h2>
                 <p>Follow the impossibly perfect Sakamoto as he handles every situation with unbelievable style, creating absurd and hilarious scenarios that will leave you in stitches.</p>
@@ -84,27 +169,27 @@
         </article>
     </div>
 
-    <footer class="bg-dark text-light py-4 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>About Anime Dynasty</h5>
-                    <p>Your go-to source for anime content, reviews, and discussions.</p>
+        <footer class="bg-dark text-light py-4 mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>About Anime Dynasty</h5>
+                        <p>Your go-to source for anime content, reviews, and discussions.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Quick Links</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="../index.html" class="text-light">Home</a></li>
+                            <li><a href="../articles.html" class="text-light">Articles</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="../index.html" class="text-light">Home</a></li>
-                        <li><a href="../articles.html" class="text-light">Articles</a></li>
-                    </ul>
+                <div class="text-center mt-4">
+                    <p>&copy; 2023 Anime Dynasty. All rights reserved.</p>
                 </div>
             </div>
-            <div class="text-center mt-4">
-                <p>&copy; 2023 Anime Dynasty. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+        </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>

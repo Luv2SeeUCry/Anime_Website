@@ -12,3 +12,12 @@ node_modules/
 # OS files
 .DS_Store
 Thumbs.db
+git remote remove origin
+git remote add origin https://github.com/Luv2SeeUCry/Anime_Website.git
+git branch -M main
+git push -u origin main
+
+
+.env
+*.pyc
+__pycache__/

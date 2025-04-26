@@ -317,3 +317,60 @@ const allOngoingAnime = [
     "streamUrl": "episodes/to-be-hero-x-episode-3.html"
   }
 ];
+document.addEventListener('DOMContentLoaded', () => {
+    // Load anime data
+    fetch('http://localhost:5000/api/anime')
+        .then(response => response.json())
+        .then(data => {
+            if (document.getElementById('latest-releases-grid')) {
+                loadLatestReleases(data.latestSixAnime);
+            } else if (document.getElementById('anime-container')) {
+                loadAnimeList(data.allOngoingAnime);
+            }
+        })
+        .catch(error => console.error('Error loading anime data:', error));
+});
+
+function loadLatestReleases(animeList) {
+    const container = document.getElementById('latest-releases-grid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    animeList.forEach(anime => {
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        card.innerHTML = `
+            <img src='${anime.image}' alt='${anime.title}'>
+            <div class='anime-info'>
+                <h3>${anime.title}</h3>
+                <p>Episode ${anime.currentEpisode}</p>
+                <p>${anime.releaseDay} at ${anime.releaseTime}</p>
+                <p>Status: ${anime.status}</p>
+            </div>
+        `;
+        card.onclick = () => window.location.href = anime.streamUrl;
+        container.appendChild(card);
+    });
+}
+
+function loadAnimeList(animeList) {
+    const container = document.getElementById('anime-container');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    animeList.forEach(anime => {
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        card.innerHTML = `
+            <img src="${anime.image}" alt="${anime.title}">
+            <div class="anime-info">
+                <h3>${anime.title}</h3>
+                <p>Episode ${anime.currentEpisode}</p>
+                <p>${anime.releaseDay} at ${anime.releaseTime}</p>
+                <p>Status: ${anime.status}</p>
+            </div>
+        `;
+        card.onclick = () => window.location.href = anime.streamUrl;
+        container.appendChild(card);
+    });
+}

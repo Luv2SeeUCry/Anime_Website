@@ -120,4 +120,3 @@ closeButton.addEventListener('click', function() {
     const bsModal = bootstrap.Modal.getInstance(modal);
     bsModal.hide();
 });
-});

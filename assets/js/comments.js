@@ -1,222 +1,320 @@
-// User management
-// Add at the top with other variables
-let currentUser = null;
-let isAdmin = false;
+// Check authentication status on page load
+document.addEventListener('DOMContentLoaded', () => {
+    checkAuthStatus();
+});
 
-// Add this function to check stored credentials
-function checkStoredCredentials() {
-    const storedUser = localStorage.getItem('currentUser');
-    const storedAdmin = localStorage.getItem('isAdmin');
-    const storedPassword = localStorage.getItem('password');
-    
-    if (storedUser && storedPassword) {
-        // Verify stored credentials with server
-        fetch('http://localhost:5000/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-                username: storedUser, 
-                password: storedPassword 
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                currentUser = storedUser;
-                isAdmin = data.isAdmin || false;
-                showCommentSection();
-                loadComments();
-            } else {
-                // Clear invalid stored credentials
-                localStorage.clear();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            localStorage.clear();
-        });
+// Authentication status check
+function checkAuthStatus() {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+        const username = localStorage.getItem('username');
+        const isAdmin = localStorage.getItem('isAdmin') === 'true';
+        showCommentSection(username, isAdmin);
+    } else {
+        showLoginSection();
     }
 }
 
-// Update login function to store password
-function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    if (!username || !password) {
-        alert('Please enter both username and password');
-        return;
-    }
-
-    fetch('http://localhost:5000/api/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            currentUser = username;
-            isAdmin = data.isAdmin || false;
-            // Store only session token, not password
-            localStorage.setItem('currentUser', currentUser);
-            localStorage.setItem('isAdmin', isAdmin);
-            localStorage.setItem('sessionToken', data.token); // Server should provide a token
-            showCommentSection();
-            loadComments();
-        } else {
-            alert(data.message || 'Invalid credentials');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Login failed. Please try again.');
-    });
-}
-
-// Update the logout function
-function logout() {
-    currentUser = null;
-    isAdmin = false;
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('isAdmin');
-    document.getElementById('loginSection').classList.remove('d-none');
+// Show/Hide Sections
+function showLoginSection() {
+    document.getElementById('loginSection').style.display = 'block';
     document.getElementById('commentSection').classList.add('d-none');
 }
 
-// Update the DOMContentLoaded event listener
-document.addEventListener('DOMContentLoaded', () => {
-    checkStoredCredentials();
+function showCommentSection(username, isAdmin) {
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('commentSection').classList.remove('d-none');
+    document.getElementById('loggedInUser').textContent = `Logged in as ${username}${isAdmin ? ' (Admin)' : ''}`;
     loadComments();
-});
-
-// Add these functions to your existing comments.js
+}
 
 function showRegister() {
     const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
     registerModal.show();
 }
 
+async function register() {
+    const username = document.getElementById('registerUsername').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
 
-// Add this function to show/hide comment sections
-function showCommentSection() {
-    if (currentUser) {
-        document.getElementById('loginSection').classList.add('d-none');
-        document.getElementById('commentSection').classList.remove('d-none');
-        document.getElementById('loggedInUser').textContent = `Logged in as: ${currentUser}`;
-    } else {
-        document.getElementById('loginSection').classList.remove('d-none');
-        document.getElementById('commentSection').classList.add('d-none');
+    // Basic validation
+    if (!username || !email || !password || !confirmPassword) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+    }
+
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters long');
+        return;
+    }
+
+    try {
+        // Get existing users or initialize empty array
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // Check if username already exists
+        if (users.some(user => user.username === username)) {
+            alert('Username already exists');
+            return;
+        }
+
+        // Check if email already exists
+        if (users.some(user => user.email === email)) {
+            alert('Email already exists');
+            return;
+        }
+
+        // Add new user
+        users.push({
+            username,
+            email,
+            password, // In a real app, this should be hashed
+            isAdmin: false
+        });
+
+        // Save updated users array
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Close modal
+        const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+        registerModal.hide();
+        
+        // Clear form
+        document.getElementById('registerUsername').value = '';
+        document.getElementById('registerEmail').value = '';
+        document.getElementById('registerPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+
+        // Show success message and prompt to login
+        alert('Registration successful! Please login with your credentials.');
+        showLoginSection();
+    } catch (error) {
+        console.error('Registration error:', error);
+        alert('Registration failed. Please try again.');
     }
 }
 
-// Add this function to load comments
-// Update the loadComments function to include delete button for admins
+// Update login function to check against registered users
+async function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (!username || !password) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    try {
+        // For demo purposes, check if it's the admin user
+        if (username === 'admin' && password === 'admin123') {
+            localStorage.setItem('authToken', 'demo-token');
+            localStorage.setItem('username', 'admin');
+            localStorage.setItem('isAdmin', 'true');
+            showCommentSection('admin', true);
+            return;
+        }
+
+        // Get users from localStorage
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // Find user
+        const user = users.find(u => u.username === username && u.password === password);
+        
+        if (user) {
+            // Store auth info
+            localStorage.setItem('authToken', 'demo-token');
+            localStorage.setItem('username', user.username);
+            localStorage.setItem('isAdmin', user.isAdmin);
+            
+            // Show comment section
+            showCommentSection(user.username, user.isAdmin);
+        } else {
+            alert('Invalid username or password');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('Login failed. Please try again.');
+    }
+}
+
+function logout() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('isAdmin');
+    showLoginSection();
+}
+
+// Comment Functions
+async function postComment() {
+    const commentText = document.getElementById('commentText').value.trim();
+    if (!commentText) {
+        alert('Please enter a comment');
+        return;
+    }
+
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        alert('Please login to post comments');
+        return;
+    }
+
+    try {
+        // Get existing comments or initialize empty array
+        const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+        
+        // Create new comment object
+        const newComment = {
+            id: Date.now(), // Use timestamp as unique ID
+            text: commentText,
+            username: localStorage.getItem('username'),
+            timestamp: new Date().toISOString(),
+            mentions: extractMentions(commentText)
+        };
+
+        // Add new comment to array
+        comments.push(newComment);
+
+        // Save updated comments array
+        localStorage.setItem('comments', JSON.stringify(comments));
+
+        // Clear input and reload comments
+        document.getElementById('commentText').value = '';
+        loadComments();
+
+    } catch (error) {
+        console.error('Error posting comment:', error);
+        alert('Failed to post comment. Please try again.');
+    }
+}
+
+function deleteComment(commentId) {
+    const currentUser = localStorage.getItem('username');
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
+    const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+    
+    const comment = comments.find(c => c.id === commentId);
+    if (!comment) return;
+
+    if (isAdmin || comment.username === currentUser) {
+        const updatedComments = comments.filter(c => c.id !== commentId);
+        localStorage.setItem('comments', JSON.stringify(updatedComments));
+        loadComments();
+    } else {
+        alert('You do not have permission to delete this comment.');
+    }
+}
+
+function processCommentText(text) {
+    // Convert @mentions to clickable links
+    return text.replace(/@(\w+)/g, '<span class="mention">@$1</span>');
+}
+
+function extractMentions(text) {
+    const mentions = text.match(/@(\w+)/g) || [];
+    return mentions.map(mention => mention.substring(1));
+}
+
 function loadComments() {
     const commentsContainer = document.getElementById('comments-container');
-    if (!commentsContainer) return;
+    const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+    const currentUser = localStorage.getItem('username');
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-    fetch('http://localhost:5000/api/comments')
-        .then(response => response.json())
-        .then(comments => {
-            commentsContainer.innerHTML = comments.map(comment => `
-                <div class="comment">
-                    <div class="comment-header">
-                        <span>${comment.username}</span>
-                        <span>${comment.timestamp}</span>
-                        ${isAdmin ? `
-                            <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        ` : ''}
-                    </div>
-                    <div class="comment-content">${comment.text}</div>
+    commentsContainer.innerHTML = comments.map(comment => `
+        <div class="comment bg-dark text-light p-3 mb-3 rounded">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong>${comment.username}</strong>
+                <div>
+                    <small class="text-muted">${new Date(comment.timestamp).toLocaleString()}</small>
+                    ${(isAdmin || comment.username === currentUser) ? 
+                        `<button class="btn btn-danger btn-sm ms-2" onclick="deleteComment(${comment.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>` : 
+                        ''}
                 </div>
-            `).join('');
-        })
-        .catch(error => {
-            console.error('Error loading comments:', error);
-        });
-}
-
-// Add the deleteComment function
-function deleteComment(commentId) {
-    if (!isAdmin || !currentUser) return;
-
-    if (confirm('Are you sure you want to delete this comment?')) {
-        fetch(`http://localhost:5000/api/comments/${commentId}?username=${currentUser}`, {
-            method: 'DELETE'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                loadComments(); // Reload comments after deletion
-            } else {
-                alert('Failed to delete comment: ' + (data.message || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to delete comment');
-        });
-    }
-}
-
-function addCommentToDOM(comment) {
-    const container = document.getElementById('comments-container');
-    const commentElement = document.createElement('div');
-    commentElement.className = 'comment';
-    
-    const date = new Date(comment.timestamp);
-    const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-
-    const deleteButton = isAdmin ? 
-        `<button class="btn btn-danger btn-sm" onclick="deleteComment(${comment.id})">
-            <i class="fas fa-trash"></i>
-         </button>` : '';
-
-    commentElement.innerHTML = `
-        <div class="comment-header">
-            <span class="comment-author">${comment.username}</span>
-            <div class="d-flex align-items-center gap-2">
-                <span class="comment-date">${formattedDate}</span>
-                ${deleteButton}
             </div>
+            <p class="mb-0">${comment.text}</p>
+            ${comment.mentions.length > 0 ? 
+                `<div class="mentions mt-2">
+                    <small class="text-muted">Mentioned: ${comment.mentions.join(', ')}</small>
+                </div>` : 
+                ''}
         </div>
-        <div class="comment-content">${comment.text}</div>
-    `;
+    `).join('');
 
-    container.insertBefore(commentElement, container.firstChild);
+    if (comments.length === 0) {
+        commentsContainer.innerHTML = '<p class="text-muted">No comments yet. Be the first to comment!</p>';
+    }
 }
 
-// Add mention click handler
-function handleMentionClick(username) {
-    document.getElementById('commentText').value += `@${username} `;
-    document.getElementById('commentText').focus();
+// Add mention suggestion functionality
+document.getElementById('commentText')?.addEventListener('input', function(e) {
+    const cursorPos = this.selectionStart;
+    const text = this.value;
+    const lastAtSymbol = text.lastIndexOf('@', cursorPos);
+    
+    if (lastAtSymbol !== -1 && lastAtSymbol < cursorPos) {
+        const query = text.substring(lastAtSymbol + 1, cursorPos).toLowerCase();
+        showMentionSuggestions(query);
+    } else {
+        hideMentionSuggestions();
+    }
+});
+
+function showMentionSuggestions(query) {
+    // Get all unique usernames from comments
+    const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+    const usernames = [...new Set(comments.map(c => c.username))];
+    
+    const matches = usernames.filter(username => 
+        username.toLowerCase().includes(query) && username !== localStorage.getItem('username')
+    );
+
+    const suggestionBox = document.getElementById('mentionSuggestions') || 
+        createMentionSuggestionsBox();
+
+    if (matches.length > 0) {
+        suggestionBox.innerHTML = matches.map(username => 
+            `<div class="suggestion" onclick="insertMention('${username}')">${username}</div>`
+        ).join('');
+        suggestionBox.style.display = 'block';
+    } else {
+        suggestionBox.style.display = 'none';
+    }
 }
 
-// Add CSS for mentions
-const style = document.createElement('style');
-style.textContent = `
-    .mention {
-        color: #007bff;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    .mention:hover {
-        text-decoration: underline;
-    }
-`;
-document.head.appendChild(style);
+function createMentionSuggestionsBox() {
+    const box = document.createElement('div');
+    box.id = 'mentionSuggestions';
+    box.className = 'mention-suggestions';
+    document.getElementById('commentSection').appendChild(box);
+    return box;
+}
 
-// At the top of the file, after variable declarations
-window.login = login;
-window.showRegister = showRegister;
-window.register = register;
-window.logout = logout;
-window.postComment = postComment;
-window.deleteComment = deleteComment;
+function hideMentionSuggestions() {
+    const suggestionBox = document.getElementById('mentionSuggestions');
+    if (suggestionBox) {
+        suggestionBox.style.display = 'none';
+    }
+}
+
+function insertMention(username) {
+    const textarea = document.getElementById('commentText');
+    const text = textarea.value;
+    const cursorPos = textarea.selectionStart;
+    const lastAtSymbol = text.lastIndexOf('@', cursorPos);
+    
+    const beforeMention = text.substring(0, lastAtSymbol);
+    const afterMention = text.substring(cursorPos);
+    
+    textarea.value = beforeMention + '@' + username + ' ' + afterMention;
+    textarea.focus();
+    hideMentionSuggestions();
+}

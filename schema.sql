@@ -30,3 +30,8 @@ CREATE TABLE donations (
     status VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Add indexes for frequently queried columns
+CREATE INDEX idx_comments_episode_id ON comments(episode_id);
+CREATE INDEX idx_comments_user_id ON comments(user_id);
+CREATE INDEX idx_users_username ON users(username);
