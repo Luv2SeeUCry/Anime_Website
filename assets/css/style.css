@@ -737,3 +737,926 @@ body {
     }
 }
 
+/* Upcoming Anime Styles */
+.anime-card {
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.anime-card h3 {
+    font-size: 1.4rem;
+    color: #ffffff;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.anime-card p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.anime-card:hover {
+    transform: translateY(-5px);
+    background: #222222;
+}
+
+.card.bg-dark {
+    background: #1a1a1a !important;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-header {
+    background: #1a1a1a;
+    border-bottom: 2px solid #ff4757;
+    padding: 1.5rem;
+}
+
+.card-header h2 {
+    color: #ff4757;
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.month-section {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+}
+
+.month-title {
+    color: #ff4757;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+    border-left: 4px solid #ff4757;
+}
+
+.card-body {
+    padding: 2rem;
+    background: transparent;
+}
+
+.row.g-4 {
+    margin-right: -1rem;
+    margin-left: -1rem;
+}
+
+.col-md-4 {
+    padding: 1rem;
+}
+
+.episode-button {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(45deg, #ff4d4d, #ff6b6b);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    justify-content: center;
+}
+
+.episode-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+    color: white;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #ff4757;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.875rem;
+}
+
+.season-header {
+    color: #ff4757;
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+
+/* Fix for modal backdrop and scrolling issues */
+body.modal-open {
+    overflow: auto !important;
+    padding-right: 0 !important;
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.show {
+    opacity: 0.5;
+}
+
+/* Ensure content is scrollable */
+html, body {
+    height: 100%;
+    overflow-y: auto !important;
+}
+
+/* Fix for dark overlay */
+#loginSection, #commentSection {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
+}
+
+/* Ensure modals don't block scrolling */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Schedule Section Styles */
+.schedule-section {
+    position: relative;
+    padding: 2rem 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.95));
+    border-radius: 10px;
+    margin: 2rem 0;
+}
+
+.schedule-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.schedule-section h2,
+.schedule-section .schedule-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.schedule-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    transition: transform 0.3s ease, background 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.schedule-item:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.schedule-info {
+    flex: 1;
+}
+
+.schedule-time {
+    color: #ff4757;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.schedule-anime {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.schedule-episode {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+}
+
+.schedule-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: rgba(255, 71, 87, 0.2);
+    color: #ff4757;
+    margin-left: 1rem;
+}
+
+
+/* Latest Articles, Recently Released, and Upcoming Releases shared styles */
+.latest-articles,
+.recently-released,
+.upcoming-releases {
+    position: relative;
+    padding: 2rem 0;
+    margin: 2rem 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.95));
+    border-radius: 10px;
+}
+
+.latest-articles::before,
+.recently-released::before,
+.upcoming-releases::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.latest-articles h2,
+.recently-released h2,
+.upcoming-releases h2,
+.latest-articles .view-all-btn,
+.recently-released .view-all-btn,
+.upcoming-releases .view-schedule-btn {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.view-all-btn,
+.view-schedule-btn {
+    background: linear-gradient(45deg, #ff4d4d, #ff6b6b);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.view-all-btn:hover,
+.view-schedule-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+}
+
+.donate-button {
+    background: linear-gradient(45deg, #ff4d4d, #ff6b6b);
+    color: white !important;
+    padding: 8px 20px;  /* Reduced padding */
+    border-radius: 20px;  /* Smaller border radius */
+    border: none;
+    font-size: 0.9rem;  /* Smaller font size */
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;  /* Reduced gap */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.donate-button i, .episode-button i {
+    font-size: 1rem;  /* Smaller icon size */
+}
+
+/* Update support section button */
+.support-section button.btn-outline-light {
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.support-section button.btn-outline-light:hover {
+    background: #fff;
+    color: #121212;
+}
+
+/* Modal tab styling */
+.nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 12px 20px;
+}
+
+.nav-tabs .nav-link.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+}
+
+.nav-tabs .nav-link:hover:not(.active) {
+    color: white;
+    border: none;
+}
+
+/* Donation Modal Styles */
+.modal-content {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.qr-container {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.qr-container:hover {
+    transform: scale(1.05);
+}
+
+.qr-code {
+    max-width: 200px;
+    height: auto;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(10px);
+    color: white;
+}
+
+.payment-icon {
+    height: 40px;
+    margin-right: 15px;
+    transition: transform 0.3s ease;
+}
+
+.payment-option:hover .payment-icon {
+    transform: scale(1.1);
+}
+
+.amount-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.amount-btn {
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.amount-btn.active {
+    background: linear-gradient(45deg, #ff4d4d, #ff6b6b);
+    border-color: transparent;
+}
+
+.anonymous-option {
+    text-align: left;
+}
+
+.anonymous-label {
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.anonymous-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.donate-confirm-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, #ff4d4d, #ff6b6b);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.donate-confirm-btn:not(:disabled) {
+    opacity: 1;
+}
+
+.donate-confirm-btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+}
+
+.custom-amount {
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-amount-container {
+    position: relative;
+    display: inline-block;
+    width: 120px;
+}
+
+.custom-amount-input {
+    width: 100%;
+    padding: 8px 24px 8px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.custom-amount-input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.custom-amount-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.currency-symbol {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+}
+
+.custom-amount-input::-webkit-inner-spin-button,
+.custom-amount-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.custom-amount-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.custom-amount-input:focus {
+    outline: none;
+}
+
+.custom-amount-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.donation-message {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+}
+
+.donation-message i {
+    margin-right: 5px;
+}
+
+/* Donate Button Styles */
+.donate-button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.donate-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.donate-button i {
+    margin-right: 10px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+
+/* Comment System Styles */
+.mention {
+    color: #ff4757;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.mention:hover {
+    text-decoration: underline;
+}
+
+.mention-suggestions {
+    position: absolute;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+}
+
+.mention-suggestions .suggestion {
+    padding: 8px 16px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.mention-suggestions .suggestion:hover {
+    background: #3a3a3a;
+}
+
+.btn-danger {
+    background-color: #ff4757;
+    border-color: #ff4757;
+}
+
+.btn-danger:hover {
+    background-color: #ff6b81;
+    border-color: #ff6b81;
+}
+
+/* Article Grid Layout */
+#all-articles-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6rem;
+    padding: 2rem 4rem;
+    justify-content: center;
+}
+
+.card {
+    flex: 0 0 calc(40% - 2rem);
+    position: relative;
+    height: 260px;
+    background: transparent !important;
+    border: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:nth-child(odd) {
+    margin-right: auto;
+}
+
+.card:nth-child(even) {
+    margin-left: auto;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 50%, transparent 100%);
+    color: white;
+}
+
+.card-title {
+    display: none; /* Hide the overlaid text */
+}
+
+.episode-button {
+    width: fit-content;
+    padding: 12px 40px !important;
+    font-size: 1.2rem !important;
+    z-index: 2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .card {
+        flex: 0 0 calc(50% - 1rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        flex: 0 0 100%;
+    }
+    .card-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* Upcoming Anime Styles */
+.anime-card {
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.anime-card h3 {
+    font-size: 1.4rem;
+    color: #ffffff;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.anime-card p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.anime-card:hover {
+    transform: translateY(-5px);
+    background: #222222;
+}
+
+.card.bg-dark {
+    background: #1a1a1a !important;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-header {
+    background: #1a1a1a;
+    border-bottom: 2px solid #ff4757;
+    padding: 1.5rem;
+}
+
+.card-header h2 {
+    color: #ff4757;
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.month-section {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+}
+
+.month-title {
+    color: #ff4757;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+    border-left: 4px solid #ff4757;
+}
+
+.card-body {
+    padding: 2rem;
+    background: transparent;
+}
+
+.row.g-4 {
+    margin-right: -1rem;
+    margin-left: -1rem;
+}
+
+.col-md-4 {
+    padding: 1rem;
+}
+
+.episode-button {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(45deg, #ff4d4d, #ff6b6b);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    justify-content: center;
+}
+
+.episode-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+    color: white;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #ff4757;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.875rem;
+}
+
+.season-header {
+    color: #ff4757;
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+
+/* Fix for modal backdrop and scrolling issues */
+body.modal-open {
+    overflow: auto !important;
+    padding-right: 0 !important;
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.show {
+    opacity: 0.5;
+}
+
+/* Ensure content is scrollable */
+html, body {
+    height: 100%;
+    overflow-y: auto !important;
+}
+
+/* Fix for dark overlay */
+#loginSection, #commentSection {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
+}
+
+/* Ensure modals don't block scrolling */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Schedule Section Styles */
+.schedule-section {
+    position: relative;
+    padding: 2rem 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.95));
+    border-radius: 10px;
+    margin: 2rem 0;
+}
+
+.schedule-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.schedule-section h2,
+.schedule-section .schedule-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.schedule-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    transition: transform 0.3s ease, background 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.schedule-item:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.schedule-info {
+    flex: 1;
+}
+
+.schedule-time {
+    color: #ff4757;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.schedule-anime {
+    font-size: 1.2rem;
+    
+    margin-bottom: 0.75rem;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.schedule-episode {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+}
+
+.schedule-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: rgba(255, 71, 87, 0.2);
+    color: #ff4757;
+    margin-left: 1rem;
+}
+

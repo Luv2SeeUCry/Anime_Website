@@ -17,7 +17,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
                 <img src="assets/images/logo.png" alt="Anime Dynasty Logo" height="40" class="me-2">
                 Anime Dynasty
             </a>
@@ -28,6 +28,7 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link" href="articles.html">Articles</a></li>
                     <li class="nav-item"><a class="nav-link" href="ongoing-anime.html">Latest Releases</a></li>
+                    <li class="nav-item"><a class="nav-link" href="upcoming.html">Schedule</a></li>
                 </ul>
             </div>
         </div>
@@ -86,7 +87,7 @@
                     <i class="fas fa-calendar"></i> View Schedule
                 </a>
             </div>
-            <div class="row row-cols-5 g-4" id="upcoming-releases">
+            <div class="row row-cols-1 row-cols-md-4 g-4" id="upcoming-releases">
                 <!-- Upcoming releases will be loaded dynamically -->
             </div>
         </div>
@@ -98,25 +99,28 @@
             <h3 class="mb-4">Episode Discussions</h3>
             <div id="comment-auth-status">
                 <!-- Login Form -->
+                <!-- Login Form -->
                 <div class="login-container" id="loginSection">
                     <div class="login-box">
                         <h2>Welcome Back</h2>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="username" placeholder="Username">
-                            <label for="username">Username</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="password" placeholder="Password">
-                            <label for="password">Password</label>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button class="episode-button" onclick="login()">
-                                <i class="fas fa-sign-in-alt"></i> Login
-                            </button>
-                            <button class="episode-button" onclick="showRegister()">
-                                <i class="fas fa-user-plus"></i> Create Account
-                            </button>
-                        </div>
+                        <form id="loginForm" onsubmit="event.preventDefault(); login();">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="username" placeholder="Username" required>
+                                <label for="username">Username</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                                <label for="password">Password</label>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="episode-button">
+                                    <i class="fas fa-sign-in-alt"></i> Login
+                                </button>
+                                <button type="button" class="episode-button" onclick="showRegister()">
+                                    <i class="fas fa-user-plus"></i> Create Account
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 
@@ -229,7 +233,7 @@
                                         <input type="checkbox" id="anonymousDonation"> Make donation anonymous
                                     </label>
                                 </div>
-                                <button class="donate-confirm-btn mt-3" disabled>
+                                <button class="donate-confirm-btn mt-3">
                                     Proceed to Pay
                                 </button>
                             </div>
@@ -247,16 +251,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
+        // Initialize amount buttons and custom amount input
+        const amountButtons = document.querySelectorAll('.amount-btn');
+        const customAmountInput = document.querySelector('.custom-amount-input');
+        const donateConfirmBtn = document.querySelector('.donate-confirm-btn');
+        let selectedAmount = 0;
+
         function initiatePayment(amount) {
             var options = {
-                "key": "YOUR_RAZORPAY_KEY_ID", // Replace with your key
-                "amount": amount * 100, // Amount in paise
+                "key": "rzp_test_9jAhsEf2z8vaJd", // Replace this with your actual Razorpay test key
+                "amount": amount * 100,
                 "currency": "INR",
                 "name": "Anime Dynasty",
                 "description": "Support Anime Dynasty",
                 "image": "assets/images/logo.png",
-                "handler": function (response){
-                    alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                "handler": function (response) {
+                    const paymentId = response.razorpay_payment_id;
+                    const isAnonymous = document.getElementById('anonymousDonation').checked;
+                    alert(`Thank you for your support! Payment ID: ${paymentId}`);
                 },
                 "prefill": {
                     "name": "",
@@ -270,13 +282,79 @@
             rzp1.open();
         }
 
-        // Update donation buttons to use Razorpay
-        document.querySelectorAll('.amount-btn').forEach(button => {
+        // Handle amount button clicks
+        amountButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const amount = this.getAttribute('data-amount');
-                initiatePayment(amount);
+                amountButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                selectedAmount = parseInt(this.getAttribute('data-amount'));
+                donateConfirmBtn.disabled = false;
+                customAmountInput.value = '';
             });
         });
+
+        // Handle custom amount input
+        customAmountInput.addEventListener('input', function() {
+            const amount = parseInt(this.value) || 0;
+            if (amount > 0) {
+                amountButtons.forEach(btn => btn.classList.remove('active'));
+                selectedAmount = amount;
+                donateConfirmBtn.disabled = false;
+            } else {
+                selectedAmount = 0;
+                donateConfirmBtn.disabled = true;
+            }
+        });
+
+        // Initialize donate button state
+        donateConfirmBtn.disabled = true;
+
+        // Handle donate confirm button click
+        donateConfirmBtn.addEventListener('click', function() {
+            if (selectedAmount > 0) {
+                initiatePayment(selectedAmount);
+            }
+        });
     </script>
+
+    <!-- Add this right before the closing </body> tag -->
+    <!-- Registration Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="login-container">
+                        <form id="registerForm" onsubmit="event.preventDefault(); register();">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="registerUsername" placeholder="Username" required>
+                                <label for="registerUsername">Username</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="registerEmail" placeholder="Email" required>
+                                <label for="registerEmail">Email</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="registerPassword" placeholder="Password" required>
+                                <label for="registerPassword">Password</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+                                <label for="confirmPassword">Confirm Password</label>
+                            </div>
+                            <button type="submit" class="episode-button w-100">
+                                <i class="fas fa-user-plus"></i> Create Account
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Scripts -->
+    <script src="assets/js/comments.js"></script>
 </body>
 </html>

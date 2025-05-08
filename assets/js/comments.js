@@ -1,6 +1,24 @@
 // Check authentication status on page load
 document.addEventListener('DOMContentLoaded', () => {
     checkAuthStatus();
+    
+    // Add click event listeners for login and register buttons
+    const loginButton = document.querySelector('button[onclick="login()"]');
+    const registerButton = document.querySelector('button[onclick="showRegister()"]');
+    
+    if (loginButton) {
+        loginButton.addEventListener('click', login);
+    }
+    
+    if (registerButton) {
+        registerButton.addEventListener('click', showRegister);
+    }
+    
+    // Add event listeners for register modal form
+    const registerSubmitButton = document.querySelector('#registerModal button[onclick="register()"]');
+    if (registerSubmitButton) {
+        registerSubmitButton.addEventListener('click', register);
+    }
 });
 
 // Authentication status check
@@ -17,93 +35,81 @@ function checkAuthStatus() {
 
 // Show/Hide Sections
 function showLoginSection() {
-    document.getElementById('loginSection').style.display = 'block';
-    document.getElementById('commentSection').classList.add('d-none');
+    const loginSection = document.getElementById('loginSection');
+    const commentSection = document.getElementById('commentSection');
+    
+    if (!loginSection || !commentSection) {
+        console.error('Required elements not found');
+        return;
+    }
+    
+    loginSection.style.display = 'block';
+    loginSection.classList.remove('d-none');
+    commentSection.classList.add('d-none');
 }
 
 function showCommentSection(username, isAdmin) {
-    document.getElementById('loginSection').style.display = 'none';
-    document.getElementById('commentSection').classList.remove('d-none');
-    document.getElementById('loggedInUser').textContent = `Logged in as ${username}${isAdmin ? ' (Admin)' : ''}`;
+    const loginSection = document.getElementById('loginSection');
+    const commentSection = document.getElementById('commentSection');
+    const loggedInUser = document.getElementById('loggedInUser');
+    
+    if (!loginSection || !commentSection || !loggedInUser) {
+        console.error('Required elements not found');
+        return;
+    }
+    
+    loginSection.style.display = 'none';
+    loginSection.classList.add('d-none');
+    commentSection.classList.remove('d-none');
+    loggedInUser.textContent = `Logged in as ${username}${isAdmin ? ' (Admin)' : ''}`;
     loadComments();
 }
 
 function showRegister() {
-    const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
-    registerModal.show();
-}
-
-async function register() {
-    const username = document.getElementById('registerUsername').value;
-    const email = document.getElementById('registerEmail').value;
-    const password = document.getElementById('registerPassword').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-
-    // Basic validation
-    if (!username || !email || !password || !confirmPassword) {
-        alert('Please fill in all fields');
+    const registerModalElement = document.getElementById('registerModal');
+    if (!registerModalElement) {
+        console.error('Registration modal element not found');
         return;
     }
-
-    if (password !== confirmPassword) {
-        alert('Passwords do not match');
-        return;
-    }
-
-    if (password.length < 6) {
-        alert('Password must be at least 6 characters long');
-        return;
-    }
-
     try {
-        // Get existing users or initialize empty array
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        
-        // Check if username already exists
-        if (users.some(user => user.username === username)) {
-            alert('Username already exists');
-            return;
-        }
-
-        // Check if email already exists
-        if (users.some(user => user.email === email)) {
-            alert('Email already exists');
-            return;
-        }
-
-        // Add new user
-        users.push({
-            username,
-            email,
-            password, // In a real app, this should be hashed
-            isAdmin: false
-        });
-
-        // Save updated users array
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        // Close modal
-        const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
-        registerModal.hide();
-        
-        // Clear form
-        document.getElementById('registerUsername').value = '';
-        document.getElementById('registerEmail').value = '';
-        document.getElementById('registerPassword').value = '';
-        document.getElementById('confirmPassword').value = '';
-
-        // Show success message and prompt to login
-        alert('Registration successful! Please login with your credentials.');
-        showLoginSection();
+        const registerModal = new bootstrap.Modal(registerModalElement);
+        registerModal.show();
     } catch (error) {
-        console.error('Registration error:', error);
-        alert('Registration failed. Please try again.');
+        console.error('Error showing registration modal:', error);
+        alert('Failed to open registration form. Please try again.');
     }
 }
+
+// Add this function to clear all stored users (for testing)
+function clearAllUsers() {
+    localStorage.removeItem('users');
+}
+
+// Modify the register function to include debug logging
+document.addEventListener('DOMContentLoaded', () => {
+    checkAuthStatus();
+    
+    // Remove all previous event listeners
+    const loginButton = document.querySelector('button[onclick="login()"]');
+    const registerButton = document.querySelector('button[onclick="showRegister()"]');
+    
+    // Handle register form submission
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        // Remove the inline onsubmit attribute if it exists
+        registerForm.removeAttribute('onsubmit');
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            register();
+        });
+    }
+});
 
 // Update login function to check against registered users
 async function login() {
-    const username = document.getElementById('username').value;
+    console.log('Login function called');
+    // Get values from the correct input fields
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
 
     if (!username || !password) {
@@ -121,21 +127,35 @@ async function login() {
             return;
         }
 
-        // Get users from localStorage
+        // Get users from localStorage and debug log
         const users = JSON.parse(localStorage.getItem('users') || '[]');
-        
-        // Find user
-        const user = users.find(u => u.username === username && u.password === password);
-        
+        console.log('Attempting login for:', username);
+        console.log('Stored users:', users);
+
+        // Find user with case-insensitive username comparison
+        const user = users.find(u => {
+            const usernameMatch = u.username.toLowerCase() === username.toLowerCase();
+            const passwordMatch = u.password === password;
+            console.log('Checking user:', u.username, 'Username match:', usernameMatch, 'Password match:', passwordMatch);
+            return usernameMatch && passwordMatch;
+        });
+
         if (user) {
             // Store auth info
             localStorage.setItem('authToken', 'demo-token');
             localStorage.setItem('username', user.username);
-            localStorage.setItem('isAdmin', user.isAdmin);
+            localStorage.setItem('isAdmin', user.isAdmin || false);
+            
+            // Clean up any leftover modal artifacts
+            document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
             
             // Show comment section
             showCommentSection(user.username, user.isAdmin);
         } else {
+            console.log('Login failed - no matching user found');
             alert('Invalid username or password');
         }
     } catch (error) {
@@ -221,6 +241,7 @@ function extractMentions(text) {
     return mentions.map(mention => mention.substring(1));
 }
 
+// Add missing closing bracket for loadComments function
 function loadComments() {
     const commentsContainer = document.getElementById('comments-container');
     const comments = JSON.parse(localStorage.getItem('comments') || '[]');
@@ -240,7 +261,7 @@ function loadComments() {
                         ''}
                 </div>
             </div>
-            <p class="mb-0">${comment.text}</p>
+            <p class="mb-0">${processCommentText(comment.text)}</p>
             ${comment.mentions.length > 0 ? 
                 `<div class="mentions mt-2">
                     <small class="text-muted">Mentioned: ${comment.mentions.join(', ')}</small>
@@ -252,21 +273,7 @@ function loadComments() {
     if (comments.length === 0) {
         commentsContainer.innerHTML = '<p class="text-muted">No comments yet. Be the first to comment!</p>';
     }
-}
-
-// Add mention suggestion functionality
-document.getElementById('commentText')?.addEventListener('input', function(e) {
-    const cursorPos = this.selectionStart;
-    const text = this.value;
-    const lastAtSymbol = text.lastIndexOf('@', cursorPos);
-    
-    if (lastAtSymbol !== -1 && lastAtSymbol < cursorPos) {
-        const query = text.substring(lastAtSymbol + 1, cursorPos).toLowerCase();
-        showMentionSuggestions(query);
-    } else {
-        hideMentionSuggestions();
-    }
-});
+} // Add this closing bracket
 
 function showMentionSuggestions(query) {
     // Get all unique usernames from comments
@@ -317,4 +324,138 @@ function insertMention(username) {
     textarea.value = beforeMention + '@' + username + ' ' + afterMention;
     textarea.focus();
     hideMentionSuggestions();
+}
+
+// Add this at the bottom of the file, after all function declarations
+document.addEventListener('DOMContentLoaded', function() {
+    const commentText = document.getElementById('commentText');
+    if (commentText) {
+        commentText.addEventListener('input', function(e) {
+            const cursorPos = this.selectionStart;
+            const text = this.value;
+            const lastAtSymbol = text.lastIndexOf('@', cursorPos);
+            
+            if (lastAtSymbol !== -1 && lastAtSymbol < cursorPos) {
+                const query = text.substring(lastAtSymbol + 1, cursorPos).toLowerCase();
+                showMentionSuggestions(query);
+            } else {
+                hideMentionSuggestions();
+            }
+        });
+    }
+});
+
+async function register() {
+    console.log('Register function called');
+    const username = document.getElementById('registerUsername').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    // Enhanced validation with better error messages
+    if (!username || !email || !password || !confirmPassword) {
+        const missingFields = [];
+        if (!username) missingFields.push('Username');
+        if (!email) missingFields.push('Email');
+        if (!password) missingFields.push('Password');
+        if (!confirmPassword) missingFields.push('Confirm Password');
+        alert(`Please fill in the following fields: ${missingFields.join(', ')}`);
+        return;
+    }
+
+    // Add password validation
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+    }
+
+    // Add password strength validation
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters long');
+        return;
+    }
+
+    // Add email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+
+    try {
+        // Get existing users or initialize empty array
+        let users = [];
+        const storedUsers = localStorage.getItem('users');
+        if (storedUsers) {
+            try {
+                users = JSON.parse(storedUsers);
+            } catch (e) {
+                console.error('Error parsing stored users, resetting users array');
+                localStorage.removeItem('users');
+            }
+        }
+        
+        // Debug logging
+        console.log('Parsed users:', users);
+        console.log('Attempting to register username:', username);
+        
+        // Case-insensitive username check
+        if (users.some(user => user.username.toLowerCase() === username.toLowerCase())) {
+            alert('Username already exists');
+            return;
+        }
+
+        // Case-insensitive email check
+        if (users.some(user => user.email.toLowerCase() === email.toLowerCase())) {
+            alert('Email already exists');
+            return;
+        }
+
+        // Add new user
+        const newUser = {
+            username,
+            email,
+            password, // In a real application, this should be hashed
+            isAdmin: false,
+            createdAt: new Date().toISOString()
+        };
+        
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Auto login after registration
+        localStorage.setItem('authToken', 'demo-token');
+        localStorage.setItem('username', username);
+        localStorage.setItem('isAdmin', 'false');
+
+        // Close modal and cleanup with proper timing
+        const registerModalElement = document.getElementById('registerModal');
+        if (registerModalElement) {
+            const registerModal = bootstrap.Modal.getInstance(registerModalElement);
+            if (registerModal) {
+                registerModal.hide();
+                // Ensure proper cleanup after modal animation
+                setTimeout(() => {
+                    document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+                    document.body.classList.remove('modal-open');
+                    document.body.style.overflow = '';
+                    document.body.style.paddingRight = '';
+                    
+                    // Show success message after modal is fully closed
+                    alert('Registration successful! You are now logged in.');
+                    
+                    // Show comment section for the new user
+                    showCommentSection(username, false);
+                }, 300);
+            }
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+        alert('Registration failed. Please try again.');
+        // Cleanup on error
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
 }

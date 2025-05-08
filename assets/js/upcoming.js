@@ -8,20 +8,32 @@ function loadUpcomingReleases() {
 
     container.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-light" role="status"></div></div>';
 
-    fetch('http://localhost:5000/api/upcoming')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(releases => {
-            if (releases.length === 0) {
-                container.innerHTML = '<div class="col-12"><div class="alert alert-info">No upcoming releases scheduled.</div></div>';
-                return;
-            }
-            const groupedByDay = groupReleasesByDay(releases);
-            container.innerHTML = generateScheduleHTML(groupedByDay);
+    // Get current date to determine next season
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    
+    // Determine next season and year
+    let nextSeason;
+    let nextYear = year;
+    
+    if (month >= 1 && month <= 3) {
+        nextSeason = 'spring';
+    } else if (month >= 4 && month <= 6) {
+        nextSeason = 'summer';
+    } else if (month >= 7 && month <= 9) {
+        nextSeason = 'fall';
+    } else {
+        nextSeason = 'winter';
+        nextYear++; // If we're in Oct-Dec, the next season is winter of next year
+    }
+
+    // Using Jikan API to fetch next season's anime
+    fetch(`https://api.jikan.moe/v4/seasons/${nextYear}/${nextSeason}`)
+        .then(response => response.json())
+        .then(data => {
+            const animeByDay = organizeAnimeByDay(data.data);
+            container.innerHTML = generateScheduleHTML(animeByDay);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -38,18 +50,27 @@ function loadUpcomingReleases() {
         });
 }
 
-function groupReleasesByDay(releases) {
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    const grouped = {};
-    days.forEach(day => grouped[day] = []);
-    
-    releases.forEach(release => {
-        if (release.day_of_week in grouped) {
-            grouped[release.day_of_week].push(release);
+function organizeAnimeByDay(animeList) {
+    const days = {
+        'Monday': [], 'Tuesday': [], 'Wednesday': [], 
+        'Thursday': [], 'Friday': [], 'Saturday': [], 'Sunday': []
+    };
+
+    animeList.forEach(anime => {
+        const broadcast = anime.broadcast?.day || 'TBA';
+        if (broadcast in days) {
+            days[broadcast].push({
+                title: anime.title,
+                image_url: anime.images?.jpg?.image_url || 'assets/images/placeholder.jpg',
+                time_jst: anime.broadcast?.time || 'TBA',
+                studio: anime.studios?.[0]?.name || 'TBA',
+                episodes: anime.episodes || 'TBA',
+                synopsis: anime.synopsis || 'No synopsis available'
+            });
         }
     });
-    
-    return grouped;
+
+    return days;
 }
 
 function generateScheduleHTML(groupedReleases) {
@@ -65,13 +86,19 @@ function generateScheduleHTML(groupedReleases) {
                         ${releases.map(release => `
                             <div class="anime-item mb-3">
                                 <div class="d-flex">
-                                    <img src="${release.image_url || 'assets/images/placeholder.jpg'}" 
-                                         class="me-3" style="width: 80px; height: 120px; object-fit: cover;">
+                                    <img src="${release.image_url}" 
+                                         class="me-3" 
+                                         style="width: 80px; height: 120px; object-fit: cover; border-radius: 5px;"
+                                         alt="${release.title}"
+                                         onerror="this.src='assets/images/placeholder.jpg'">
                                     <div>
                                         <h6 class="mb-1">${release.title}</h6>
                                         <small class="text-muted">${release.time_jst} JST</small>
                                         ${release.studio ? `<p class="mb-1 small">Studio: ${release.studio}</p>` : ''}
                                         ${release.episodes ? `<p class="mb-1 small">Episodes: ${release.episodes}</p>` : ''}
+                                        <div class="synopsis-preview small text-muted mt-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                            ${release.synopsis}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
